@@ -10,7 +10,17 @@
 </head>
 
 <body>
+        <link rel="stylesheet" media="screen" href="https://netdna.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+        <script src="https://code.jquery.com/jquery.js"></script>
+        <script src="https://netdna.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+        <script src="https://d3js.org/d3.v3.min.js"></script>
+    <h2>Sample</h2>
+    <select id="selDataset" onchange="optionChanged(this.value)"></select>
+        
+
+
     <div id = "pie"></div>
+    <div id = "bubble"></div>
     <script>
     
     
@@ -20,6 +30,8 @@
 
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+
+
 </body>
 
 </html>
