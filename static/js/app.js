@@ -33,33 +33,56 @@ function populate() {
 
 function optionChanged(sample1){
     url = "/samples/"+sample1;
+    url1 = "/metadata/"+sample1;
+    
 
     var PIE = document.getElementById("pie");
+    var BUBBLE = document.getElementById("bubble");
+    var tableMeta = document.getElementById("sampleMeta");
+    tableMeta.innerHTML="";
+
+    var th = document.createElement("th")
+    var thTitle = document.createTextNode("Sample Meta Data")
+    th.appendChild(thTitle);
+    tableMeta.appendChild(th);
+
+    Plotly.d3.json(url1, function(error,metaData){
+        if (error) return console.log("error");
+        for (var key in metaData[0]){
+            var tr = document.createElement("tr");
+            var td = document.createElement("td");
+            var txt = document.createTextNode(key + ":" + metaData[0][key])
+            console.log(txt);
+            td.appendChild(txt);
+            tr.appendChild(td);
+            tableMeta.appendChild(tr)
+           // option1.text = metaData[i];
+           // option1.value = metaData[i];
+           // tableMeta.append(option1);
+        }
+    });
 
     Plotly.d3.json(url, function(error,sample_data){
         if (error) return console.log("error");
 
         sampleOTU = sample_data.otu_id.slice(0,10);
         sampleVALUES = sample_data.sample_values.slice(0,10);
+        all_OTU = sample_data.otu_id;
+        all_VALUE = sample_data.sample_values;
 
-        var data = [{
-            values: sampleVALUES,
-            labels: sampleOTU,
-            type: "pie"
-          }];
-        
-          var layout = {
-            height: 1200,
-            width: 1600
-          };
-        
-          Plotly.restyle(PIE, "values", [sampleVALUES])
-         // Plotly.restyle(PIE,"labels",[sampleOTU]);
 
-         updatePlot(sampleOTU,sampleVALUES);
+        
+          Plotly.restyle(PIE, "values", [sampleVALUES]);
+          Plotly.restyle(BUBBLE,"x",[all_OTU]);
+          Plotly.restyle(BUBBLE, "y",[all_VALUE]);
+          //Plotly.restyle(BUBBLE, "title",sample1);
+
+         updatePlot(sampleOTU,sampleVALUES,all_OTU,all_VALUE);
 
 
         });
+        
+
 
 }
 
@@ -69,6 +92,30 @@ function init(){
     initSample = "BB_940";
 
     url = "/samples/"+initSample;
+
+    url1 = "/metadata/"+initSample;
+
+    var tableMeta = document.getElementById("sampleMeta");
+    var th = document.createElement("th")
+    var thTitle = document.createTextNode("Sample Meta Data")
+    th.appendChild(thTitle);
+    tableMeta.appendChild(th);
+
+    Plotly.d3.json(url1, function(error,metaData){
+        if (error) return console.log("error");
+        for (var key in metaData[0]){
+            var tr = document.createElement("tr");
+            var td = document.createElement("td");
+            var txt = document.createTextNode(key + ":" + metaData[0][key])
+            console.log(txt);
+            td.appendChild(txt);
+            tr.appendChild(td);
+            tableMeta.appendChild(tr)
+           // option1.text = metaData[i];
+           // option1.value = metaData[i];
+           // tableMeta.append(option1);
+        }
+    });
 
     Plotly.d3.json(url, function(error,sample_data){
         if (error) return console.log("error");
@@ -102,20 +149,21 @@ function init(){
             }
             
         };
-            
 
-         
-
+        
         var layoutBubble = {
-            title: initSample,
+           // title: initSample,
             showlegend: false,
+            hovermode: "closest",
+            xaxis: {title: "OTU ID"},
+            yaxis: {title: "Amount of Belly Button Bacteria"},
             height: 600,
             width: 1200
           };
 
         var dataBubble = [trace1];
 
-        console.log(dataBubble)
+        // console.log(dataBubble)
 
 
         
@@ -147,7 +195,8 @@ function updatePlot(sampleOTU,sampleVALUES,all_OTU,all_VALUE){
         }
           
           Plotly.restyle(PIE,"labels",[bacteriaLabel]);
-         // Plotly.restyle(BUBBLE, "text",[bacteriaLabelALL]);
+          Plotly.restyle(BUBBLE, "text",[bacteriaLabelALL]);
+          Plotly.restyle(BUBBLE, "title", ["this title"])
     
 
     })
@@ -155,6 +204,8 @@ function updatePlot(sampleOTU,sampleVALUES,all_OTU,all_VALUE){
 
 
 }
+
+
 
 
 init();
